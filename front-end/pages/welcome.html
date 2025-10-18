@@ -36,8 +36,8 @@
         }
 
         :root {
-            --primary: #008c8e;
-            --secondary: #00c9cc;
+            --primary: #ff6600;
+            --secondary: #ff8800;
             --accent: #006c6e;
             --light-blue: #00e5e8;
             --dark: #000000;
@@ -529,10 +529,7 @@
                 <span class="logo-text">1337 Meal Schedule</span>
             </div>
             <div class="nav-links">
-                <a href="#" class="nav-link">Home</a>
-                <a href="#" class="nav-link">Schedule</a>
-                <a href="#" class="nav-link">Notifications</a>
-                <a href="#" class="nav-link">Help</a>
+                <!-- Put the username got by intra 42 here: --><a href="#" class="nav-link"></a>
             </div>
         </header>
 
@@ -638,7 +635,7 @@
         </section>
 
         <footer>
-            <p>1337 Meal Schedule &copy; 2024 | Made with 💙 for 1337 Students</p>
+            <p>1337 Meal Schedule &copy; 2025 | Made in hurry for 1337 Students</p>
         </footer>
     </div>
 
@@ -646,6 +643,14 @@
         // Create floating elements
         const floatingContainer = document.getElementById('floatingElements');
         const symbols = ['🍽️', '⏰', '🥘', '🍕', '🥗', '☕', '🥪', '🍜'];
+        const params = new URLSearchParams(window.location.search);
+        const username = params.get("user");
+
+        if (username) {
+            alert(`Welcome, ${username}! 🎉`);
+        } else {
+            alert("Welcome!");
+        }
         
         for (let i = 0; i < 12; i++) {
             const element = document.createElement('div');
@@ -827,5 +832,6 @@
             });
         });
     </script>
+    
 </body>
 </html>
