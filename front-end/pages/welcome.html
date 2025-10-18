@@ -1,25 +1,3 @@
-<!--<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Welcome</title>
-</head>
-<body>
-  <h1 id="welcome"></h1>
-
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const username = params.get("user");
-
-    if (username) {
-      document.getElementById("welcome").innerText = `Welcome, ${username}! 🎉`;
-    } else {
-      document.getElementById("welcome").innerText = "Welcome!";
-    }
-  </script>
-</body>
-</html>
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1337 Meal Schedule</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -60,31 +39,26 @@
             padding: 20px;
         }
 
-        /* Floating animation */
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-10px) rotate(2deg); }
         }
 
-        /* Pulse animation */
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
 
-        /* Glow animation */
         @keyframes glow {
             0%, 100% { box-shadow: 0 0 20px rgba(0, 140, 142, 0.3); }
             50% { box-shadow: 0 0 30px rgba(0, 201, 204, 0.5), 0 0 40px rgba(0, 229, 232, 0.3); }
         }
 
-        /* Bounce animation */
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
         }
 
-        /* Header */
         header {
             display: flex;
             justify-content: space-between;
@@ -113,6 +87,7 @@
         .nav-links {
             display: flex;
             gap: 30px;
+            align-items: center;
         }
 
         .nav-link {
@@ -143,7 +118,6 @@
             width: 100%;
         }
 
-        /* Hero Section */
         .hero {
             text-align: center;
             padding: 60px 0;
@@ -168,7 +142,6 @@
             margin: 0 auto 30px;
         }
 
-        /* Dashboard */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -229,7 +202,6 @@
             color: var(--gray);
         }
 
-        /* Queue Counter Section */
         .queue-counter {
             background: rgba(0, 140, 142, 0.1);
             border-radius: 15px;
@@ -298,7 +270,6 @@
             color: var(--light-blue);
         }
 
-        /* Meal Schedule */
         .meal-schedule {
             background: rgba(0, 140, 142, 0.1);
             border-radius: 15px;
@@ -417,7 +388,6 @@
             border: 1px solid var(--light-blue);
         }
 
-        /* Time Remaining */
         .time-remaining {
             text-align: center;
             margin: 40px 0;
@@ -449,7 +419,6 @@
             font-size: 1.1rem;
         }
 
-        /* Floating elements */
         .floating-elements {
             position: fixed;
             top: 0;
@@ -467,7 +436,6 @@
             animation: float 10s infinite linear;
         }
 
-        /* Footer */
         footer {
             text-align: center;
             padding: 30px 0;
@@ -476,7 +444,6 @@
             color: var(--gray);
         }
 
-        /* Cursor animation */
         .cursor-follower {
             position: fixed;
             width: 20px;
@@ -490,7 +457,154 @@
             transition: transform 0.1s;
         }
 
-        /* Responsive */
+        .reservation-section {
+            background: rgba(0, 140, 142, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        .reservation-button {
+            background: linear-gradient(45deg, var(--primary), var(--light-blue));
+            color: var(--dark);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reservation-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 201, 204, 0.5);
+        }
+
+        .reservation-button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .reservation-button:disabled {
+            background: var(--gray-dark);
+            color: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .reservation-button:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .ticket-section {
+            background: rgba(0, 140, 142, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: glow 3s ease-in-out infinite;
+            display: none;
+        }
+
+        .ticket {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px auto;
+            max-width: 400px;
+            border: 2px dashed var(--light-blue);
+            text-align: left;
+        }
+
+        .ticket-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ticket-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .ticket-field {
+            margin-bottom: 10px;
+        }
+
+        .ticket-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .ticket-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--light-blue);
+        }
+
+        .ticket-qr {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .ticket-qr-placeholder {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: var(--gray);
+        }
+
+        .ticket-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .action-button {
+            background: rgba(0, 140, 142, 0.2);
+            color: var(--light);
+            border: 1px solid var(--primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-button:hover {
+            background: rgba(0, 201, 204, 0.3);
+            border-color: var(--light-blue);
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -515,6 +629,14 @@
             .queue-stats {
                 grid-template-columns: 1fr;
             }
+            
+            .ticket-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .ticket-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -529,7 +651,7 @@
                 <span class="logo-text">1337 Meal Schedule</span>
             </div>
             <div class="nav-links">
-                <!-- Put the username got by intra 42 here: --><a href="#" class="nav-link"></a>
+                <span id="username-display" class="nav-link"></span>
             </div>
         </header>
 
@@ -564,7 +686,59 @@
             </div>
         </div>
 
-        <!-- New Queue Counter Section -->
+        <section class="reservation-section">
+            <h2 class="section-title">Reserve Your Meal Spot 🎫</h2>
+            <p>Join the queue for the current meal service and get your digital ticket</p>
+            <button class="reservation-button" id="reserve-button">
+                <i class="fas fa-ticket-alt"></i>
+                Reserve My Spot
+            </button>
+        </section>
+
+        <section class="ticket-section" id="ticket-section">
+            <h2 class="section-title">Your Meal Ticket 🎟️</h2>
+            <div class="ticket">
+                <div class="ticket-header">
+                    <h3>1337 Meal Ticket</h3>
+                    <p>Digital Reservation</p>
+                </div>
+                <div class="ticket-details">
+                    <div class="ticket-field">
+                        <div class="ticket-label">Student Name</div>
+                        <div class="ticket-value" id="ticket-name">-</div>
+                    </div>
+                    <div class="ticket-field">
+                        <div class="ticket-label">Queue Number</div>
+                        <div class="ticket-value" id="ticket-queue">-</div>
+                    </div>
+                    <div class="ticket-field">
+                        <div class="ticket-label">Meal Type</div>
+                        <div class="ticket-value" id="ticket-meal">-</div>
+                    </div>
+                    <div class="ticket-field">
+                        <div class="ticket-label">Reservation Time</div>
+                        <div class="ticket-value" id="ticket-time">-</div>
+                    </div>
+                </div>
+                <div class="ticket-qr">
+                    <div class="ticket-qr-placeholder">
+                        <i class="fas fa-qrcode fa-3x"></i>
+                    </div>
+                    <p>Scan at cafeteria entrance</p>
+                </div>
+                <div class="ticket-actions">
+                    <button class="action-button" id="download-pdf">
+                        <i class="fas fa-file-pdf"></i>
+                        Download PDF
+                    </button>
+                    <button class="action-button" id="close-ticket">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <section class="queue-counter">
             <h2 class="section-title">Live Queue Status 👥</h2>
             
@@ -640,16 +814,13 @@
     </div>
 
     <script>
-        // Create floating elements
         const floatingContainer = document.getElementById('floatingElements');
         const symbols = ['🍽️', '⏰', '🥘', '🍕', '🥗', '☕', '🥪', '🍜'];
         const params = new URLSearchParams(window.location.search);
         const username = params.get("user");
 
         if (username) {
-            alert(`Welcome, ${username}! 🎉`);
-        } else {
-            alert("Welcome!");
+            document.getElementById('username-display').textContent = username;
         }
         
         for (let i = 0; i < 12; i++) {
@@ -663,53 +834,51 @@
             floatingContainer.appendChild(element);
         }
 
-        // Cursor follower
         const cursor = document.querySelector('.cursor-follower');
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
 
-        // Meal schedule data
         const mealSchedule = {
             breakfast: { start: 7, end: 9, name: "Breakfast" },
             lunch: { start: 12, end: 14, name: "Lunch" },
             dinner: { start: 19, end: 21, name: "Dinner" }
         };
 
-        // Queue data simulation
         let queueData = {
             inQueue: 24,
             servedToday: 156,
             queueSpeed: 12
         };
 
-        // Update queue data
+        let reservationData = {
+            hasReservation: false,
+            queueNumber: null,
+            mealType: null,
+            reservationTime: null
+        };
+
         function updateQueueData() {
-            // Simulate realistic queue changes
-            const randomChange = Math.floor(Math.random() * 5) - 2; // -2 to +2
+            const randomChange = Math.floor(Math.random() * 5) - 2;
             queueData.inQueue = Math.max(0, queueData.inQueue + randomChange);
             
-            // Increase served count based on queue speed
             if (queueData.inQueue > 0 && Math.random() > 0.3) {
                 queueData.servedToday += Math.floor(queueData.queueSpeed / 2);
             }
             
-            // Update queue speed based on time of day (lunch rush)
             const now = new Date();
             const currentHour = now.getHours();
             if (currentHour >= 12 && currentHour < 14) {
-                queueData.queueSpeed = 15 + Math.floor(Math.random() * 5); // 15-20 during lunch
+                queueData.queueSpeed = 15 + Math.floor(Math.random() * 5);
             } else {
-                queueData.queueSpeed = 8 + Math.floor(Math.random() * 5); // 8-13 other times
+                queueData.queueSpeed = 8 + Math.floor(Math.random() * 5);
             }
             
-            // Update DOM
             document.getElementById('students-in-queue').textContent = queueData.inQueue;
             document.getElementById('students-served').textContent = queueData.servedToday;
             document.getElementById('queue-speed').textContent = `${queueData.queueSpeed}/min`;
             
-            // Add color coding for queue status
             const queueElement = document.getElementById('students-in-queue');
             queueElement.className = 'queue-stat-number';
             if (queueData.inQueue > 20) {
@@ -721,7 +890,6 @@
             }
         }
 
-        // Update current time
         function updateCurrentTime() {
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
@@ -729,7 +897,6 @@
             document.getElementById('current-time').textContent = `${hours}:${minutes}`;
         }
 
-        // Update meal status and time remaining
         function updateMealStatus() {
             const now = new Date();
             const currentHour = now.getHours();
@@ -740,24 +907,20 @@
             let nextMeal = null;
             let nextMealTime = null;
 
-            // Update each meal card and find active/next meal
             Object.keys(mealSchedule).forEach(meal => {
                 const mealData = mealSchedule[meal];
                 const card = document.getElementById(`${meal}-card`);
                 const status = document.getElementById(`${meal}-status`);
                 
-                // Remove active class from all cards first
                 card.classList.remove('active');
                 
                 if (currentTime >= mealData.start && currentTime < mealData.end) {
-                    // Meal is currently open
                     card.classList.add('active');
                     status.className = 'meal-status status-open';
                     status.textContent = 'OPEN';
                     activeMeal = mealData;
                     
                 } else if (currentTime < mealData.start) {
-                    // Meal hasn't started yet
                     const startTime = new Date();
                     startTime.setHours(mealData.start, 0, 0, 0);
                     const timeDiff = startTime - now;
@@ -767,22 +930,18 @@
                     status.className = 'meal-status status-soon';
                     status.textContent = `Starts in ${hoursUntil}h ${minutesUntil}m`;
                     
-                    // Set as next meal if it's the earliest upcoming one
                     if (!nextMeal || mealData.start < nextMeal.start) {
                         nextMeal = mealData;
                         nextMealTime = { hours: hoursUntil, minutes: minutesUntil };
                     }
                     
                 } else {
-                    // Meal is closed
                     status.className = 'meal-status status-closed';
                     status.textContent = 'Closed';
                 }
             });
 
-            // Update dashboard information
             if (activeMeal) {
-                // Calculate time remaining for active meal
                 const endTime = new Date();
                 endTime.setHours(activeMeal.end, 0, 0, 0);
                 const timeDiff = endTime - now;
@@ -796,26 +955,167 @@
                 document.getElementById('next-meal').textContent = activeMeal.name;
                 
             } else if (nextMeal) {
-                // Show countdown to next meal
                 document.getElementById('time-display').textContent = 
                     `${nextMealTime.hours.toString().padStart(2, '0')}:${nextMealTime.minutes.toString().padStart(2, '0')}:00`;
                 document.getElementById('time-remaining').textContent = 
                     `${nextMealTime.hours.toString().padStart(2, '0')}:${nextMealTime.minutes.toString().padStart(2, '0')}`;
                 document.getElementById('next-meal').textContent = nextMeal.name;
             }
+
+            updateReservationButton();
         }
 
-        // Initialize the data
+        function updateReservationButton() {
+            const reserveButton = document.getElementById('reserve-button');
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentTime = currentHour + currentMinutes / 60;
+
+            let isMealActive = false;
+            let activeMealName = "";
+
+            Object.keys(mealSchedule).forEach(meal => {
+                const mealData = mealSchedule[meal];
+                if (currentTime >= mealData.start && currentTime < mealData.end) {
+                    isMealActive = true;
+                    activeMealName = mealData.name;
+                }
+            });
+
+            if (isMealActive && !reservationData.hasReservation) {
+                reserveButton.disabled = false;
+                reserveButton.innerHTML = `<i class="fas fa-ticket-alt"></i> Reserve My Spot (${activeMealName})`;
+            } else if (reservationData.hasReservation) {
+                reserveButton.disabled = true;
+                reserveButton.innerHTML = `<i class="fas fa-check"></i> Already Reserved`;
+            } else {
+                reserveButton.disabled = true;
+                reserveButton.innerHTML = `<i class="fas fa-clock"></i> No Active Meal Service`;
+            }
+        }
+
+        function handleReservation() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentTime = currentHour + currentMinutes / 60;
+
+            let activeMeal = null;
+            Object.keys(mealSchedule).forEach(meal => {
+                const mealData = mealSchedule[meal];
+                if (currentTime >= mealData.start && currentTime < mealData.end) {
+                    activeMeal = mealData;
+                }
+            });
+
+            if (!activeMeal) {
+                alert("No active meal service at the moment.");
+                return;
+            }
+
+            const queueNumber = queueData.inQueue + 1;
+
+            reservationData = {
+                hasReservation: true,
+                queueNumber: queueNumber,
+                mealType: activeMeal.name,
+                reservationTime: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            queueData.inQueue = queueNumber;
+
+            document.getElementById('ticket-name').textContent = username || "Guest User";
+            document.getElementById('ticket-queue').textContent = `#${queueNumber}`;
+            document.getElementById('ticket-meal').textContent = activeMeal.name;
+            document.getElementById('ticket-time').textContent = reservationData.reservationTime;
+
+            document.getElementById('ticket-section').style.display = 'block';
+            document.getElementById('ticket-section').scrollIntoView({ behavior: 'smooth' });
+
+            updateReservationButton();
+
+            alert(`Reservation successful! Your queue number is #${queueNumber}`);
+        }
+
+        function generatePDFTicket() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFillColor(0, 0, 0);
+            doc.rect(0, 0, 210, 297, 'F');
+
+            doc.setFontSize(24);
+            doc.setTextColor(255, 102, 0);
+            doc.text('1337 MEAL TICKET', 105, 30, { align: 'center' });
+
+            doc.setDrawColor(0, 229, 232);
+            doc.setLineWidth(1);
+            doc.line(20, 40, 190, 40);
+
+            doc.setFontSize(16);
+            doc.setTextColor(255, 255, 255);
+            doc.text('DIGITAL RESERVATION', 105, 60, { align: 'center' });
+
+            doc.setFontSize(12);
+            doc.setTextColor(139, 139, 139);
+            doc.text('STUDENT NAME:', 30, 90);
+            doc.text('QUEUE NUMBER:', 30, 110);
+            doc.text('MEAL TYPE:', 30, 130);
+            doc.text('RESERVATION TIME:', 30, 150);
+
+            doc.setTextColor(0, 229, 232);
+            doc.text(username || "Guest User", 120, 90);
+            doc.text(`#${reservationData.queueNumber}`, 120, 110);
+            doc.text(reservationData.mealType, 120, 130);
+            doc.text(reservationData.reservationTime, 120, 150);
+
+            doc.setFillColor(30, 30, 30);
+            doc.rect(70, 170, 70, 70, 'F');
+            
+            doc.setFillColor(0, 229, 232);
+            doc.rect(75, 175, 15, 15, 'F');
+            doc.rect(140, 175, 15, 15, 'F');
+            doc.rect(75, 215, 15, 15, 'F');
+            doc.rect(95, 175, 5, 5, 'F');
+            doc.rect(105, 180, 5, 5, 'F');
+            doc.rect(115, 185, 5, 5, 'F');
+            doc.rect(125, 190, 5, 5, 'F');
+            doc.rect(80, 195, 5, 5, 'F');
+            doc.rect(90, 200, 5, 5, 'F');
+            doc.rect(100, 205, 5, 5, 'F');
+            doc.rect(110, 210, 5, 5, 'F');
+            doc.rect(120, 215, 5, 5, 'F');
+            doc.rect(130, 220, 5, 5, 'F');
+            doc.rect(85, 225, 5, 5, 'F');
+            doc.rect(95, 230, 5, 5, 'F');
+
+            doc.setTextColor(139, 139, 139);
+            doc.setFontSize(10);
+            doc.text('Scan at cafeteria', 105, 220, { align: 'center' });
+
+            doc.setFontSize(10);
+            doc.setTextColor(139, 139, 139);
+            doc.text('1337 Meal Schedule - Generated on ' + new Date().toLocaleDateString(), 105, 280, { align: 'center' });
+
+            doc.save(`1337_Meal_Ticket_${username || 'Guest'}.pdf`);
+        }
+
         updateCurrentTime();
         updateMealStatus();
         updateQueueData();
+        updateReservationButton();
         
-        // Update data every second for real-time updates
         setInterval(updateCurrentTime, 1000);
         setInterval(updateMealStatus, 1000);
-        setInterval(updateQueueData, 3000); // Update queue every 3 seconds
+        setInterval(updateQueueData, 3000);
         
-        // Add some interactivity
+        document.getElementById('reserve-button').addEventListener('click', handleReservation);
+        document.getElementById('download-pdf').addEventListener('click', generatePDFTicket);
+        document.getElementById('close-ticket').addEventListener('click', function() {
+            document.getElementById('ticket-section').style.display = 'none';
+        });
+
         document.querySelectorAll('.stat-card, .queue-stat-card').forEach(card => {
             card.addEventListener('click', function() {
                 this.style.transform = 'scale(0.95)';
@@ -825,7 +1125,6 @@
             });
         });
 
-        // Add hover sound effect simulation
         document.querySelectorAll('.meal-card, .stat-card, .queue-stat-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
                 this.style.transition = 'all 0.2s ease';
