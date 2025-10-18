@@ -1,11 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Login with 42</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1337 Restaurant - Reserve Your Table</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            padding: 60px 40px;
+            background-color: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #00babc;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .login-btn {
+            background: linear-gradient(to right, #00babc, #008c8e);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 40px;
+            box-shadow: 0 5px 15px rgba(0, 186, 188, 0.4);
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(to right, #008c8e, #00babc);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 186, 188, 0.6);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .restaurant-info {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 40px 20px;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .login-btn {
+                padding: 18px 40px;
+                font-size: 1.3rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Welcome to our Hackathon Project 🚀</h1>
-  <button onclick="window.location.href='/login'">Login with 42</button>
+    <div class="container">
+        <div class="logo">1337</div>
+        <div class="subtitle">RESTAURANT</div>
+        <a onclick="window.location.href='/login'" class="login-btn" id="loginButton">LOGIN</a>
+        <div class="restaurant-info">Reserve your table at 1337 Restaurant</div>
+    </div>
+
+    <script>
+        document.getElementById('loginButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const btn = document.getElementById('loginButton');
+            const originalText = btn.textContent;
+            btn.textContent = 'CONNECTING...';
+            
+            // Simulate login process
+            setTimeout(() => {
+                alert('Redirecting to 1337 Restaurant reservation system...');
+                
+                // Reset button
+                btn.textContent = originalText;
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
